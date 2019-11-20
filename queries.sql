@@ -43,7 +43,9 @@ FROM
   [Orders] AS O
 LEFT JOIN
   [Customers] AS C
-ON O.CustomerID = C.CustomerID
+ON
+  O.CustomerID = C.CustomerID
 LEFT JOIN
   [Employees] AS E
-ON O.EmployeeID = E.EmployeeID
+ON
+  O.EmployeeID = E.EmployeeID

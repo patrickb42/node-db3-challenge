@@ -6,12 +6,8 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   Schemes.find()
-    .then((schemes) => {
-      res.json(schemes);
-    })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to get schemes' });
-    });
+    .then((schemes) => res.json(schemes))
+    .catch(() => res.status(500).json({ message: 'Failed to get schemes' }));
 });
 
 router.get('/:id', (req, res) => {
@@ -19,15 +15,11 @@ router.get('/:id', (req, res) => {
 
   Schemes.findById(id)
     .then((scheme) => {
-      if (scheme) {
-        res.json(scheme);
-      } else {
-        res.status(404).json({ message: 'Could not find scheme with given id.' });
-      }
+      return (scheme)
+        ? res.json(scheme)
+        : res.status(404).json({ message: 'Could not find scheme with given id.' });
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to get schemes' });
-    });
+    .catch(() => res.status(500).json({ message: 'Failed to get schemes' }));
 });
 
 router.get('/:id/steps', (req, res) => {
@@ -35,27 +27,19 @@ router.get('/:id/steps', (req, res) => {
 
   Schemes.findSteps(id)
     .then((steps) => {
-      if (steps.length) {
-        res.json(steps);
-      } else {
-        res.status(404).json({ message: 'Could not find steps for given scheme' });
-      }
+      return (steps.length)
+        ? res.json(steps)
+        : res.status(404).json({ message: 'Could not find steps for given scheme' });
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to get steps' });
-    });
+    .catch(() => res.status(500).json({ message: 'Failed to get steps' }));
 });
 
 router.post('/', (req, res) => {
   const schemeData = req.body;
 
   Schemes.add(schemeData)
-    .then((scheme) => {
-      res.status(201).json(scheme);
-    })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to create new scheme' });
-    });
+    .then((scheme) => res.status(201).json(scheme))
+    .catch(() => res.status(500).json({ message: 'Failed to create new scheme' }));
 });
 
 router.post('/:id/steps', (req, res) => {
@@ -64,18 +48,12 @@ router.post('/:id/steps', (req, res) => {
 
   Schemes.findById(id)
     .then((scheme) => {
-      if (scheme) {
-        Schemes.addStep(stepData, id)
-          .then((step) => {
-            res.status(201).json(step);
-          });
-      } else {
-        res.status(404).json({ message: 'Could not find scheme with given id.' });
-      }
+      return (scheme)
+        ? Schemes.addStep(stepData, id)
+          .then((step) => res.status(201).json(step))
+        : res.status(404).json({ message: 'Could not find scheme with given id.' });
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to create new step' });
-    });
+    .catch(() => res.status(500).json({ message: 'Failed to create new step' }));
 });
 
 router.put('/:id', (req, res) => {
@@ -84,18 +62,12 @@ router.put('/:id', (req, res) => {
 
   Schemes.findById(id)
     .then((scheme) => {
-      if (scheme) {
-        Schemes.update(changes, id)
-          .then((updatedScheme) => {
-            res.json(updatedScheme);
-          });
-      } else {
-        res.status(404).json({ message: 'Could not find scheme with given id' });
-      }
+      return (scheme)
+        ? Schemes.update(changes, id)
+          .then((updatedScheme) => res.json(updatedScheme))
+        : res.status(404).json({ message: 'Could not find scheme with given id' });
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to update scheme' });
-    });
+    .catch(() => res.status(500).json({ message: 'Failed to update scheme' }));
 });
 
 router.delete('/:id', (req, res) => {
@@ -103,15 +75,11 @@ router.delete('/:id', (req, res) => {
 
   Schemes.remove(id)
     .then((deleted) => {
-      if (deleted) {
-        res.json({ removed: deleted });
-      } else {
-        res.status(404).json({ message: 'Could not find scheme with given id' });
-      }
+      return (deleted)
+        ? res.json({ removed: deleted })
+        : res.status(404).json({ message: 'Could not find scheme with given id' });
     })
-    .catch(() => {
-      res.status(500).json({ message: 'Failed to delete scheme' });
-    });
+    .catch(() => res.status(500).json({ message: 'Failed to delete scheme' }));
 });
 
 module.exports = router;
